@@ -12,6 +12,11 @@ class EmployeeConnect extends Connect
         return new Employee();
     }
 
+    public function arrEmployees(){
+        $res = $this->db->query("SELECT employee.employee_id AS id, CONCAT (employee.lastname, ' ', employee.firstname, ' ', employee.patronomic) AS value FROM employee"." INNER JOIN dolzhnost ON employee.dolzhnost_id=dolzhnost.dolzhnost_id WHERE dolzhnost.mat_respons=1");
+        return $res->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 	public function auth ($login, $password) {
 		$login = $this->db->quote($login);
 		$res = $this->db->query("SELECT employee.employee_id, CONCAT (employee.lastname, ' ', employee.firstname, ' ', employee.patronomic) AS fio, dolzhnost.name, employee.pass FROM employee "."INNER JOIN dolzhnost ON employee.dolzhnost_id=dolzhnost.dolzhnost_id ". "WHERE employee.login = $login");
@@ -37,6 +42,11 @@ class EmployeeConnect extends Connect
 
     public function findAllManagers($ofset=0, $limit=30){
         $res = $this->db->query("SELECT employee.employee_id, CONCAT (employee.lastname, ' ', employee.firstname, ' ', employee.patronomic) AS fio, ". " otdel.name AS otdel, dolzhnost.name AS dolzhnost, dolzhnost.mat_respons AS matr, employee.dolzhnost_id AS dolzhnost_id FROM employee INNER JOIN dolzhnost ON employee.dolzhnost_id=dolzhnost.dolzhnost_id ". " INNER JOIN otdel ON employee.otdel_id=otdel.otdel_id" . " WHERE employee.dolzhnost_id = 3" . " LIMIT $ofset, $limit");
+        return $res->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public function findAllMatRespons($ofset=0, $limit=30){
+        $res = $this->db->query("SELECT employee.employee_id, CONCAT (employee.lastname, ' ', employee.firstname, ' ', employee.patronomic) AS fio, ". " otdel.name AS otdel, dolzhnost.name AS dolzhnost, dolzhnost.mat_respons AS matr, employee.dolzhnost_id AS dolzhnost_id FROM employee INNER JOIN dolzhnost ON employee.dolzhnost_id=dolzhnost.dolzhnost_id ". " INNER JOIN otdel ON employee.otdel_id=otdel.otdel_id" . " WHERE dolzhnost.mat_respons = 1" . " LIMIT $ofset, $limit");
         return $res->fetchAll(PDO::FETCH_OBJ);
     }
 

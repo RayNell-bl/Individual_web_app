@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Июн 11 2020 г., 16:41
+-- Время создания: Июн 14 2020 г., 23:26
 -- Версия сервера: 8.0.19
 -- Версия PHP: 7.1.33
 
@@ -29,17 +29,18 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `dolzhnost` (
   `dolzhnost_id` smallint NOT NULL,
-  `name` varchar(50) NOT NULL
+  `name` varchar(50) NOT NULL,
+  `mat_respons` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Дамп данных таблицы `dolzhnost`
 --
 
-INSERT INTO `dolzhnost` (`dolzhnost_id`, `name`) VALUES
-(1, 'Администратор'),
-(2, 'Руководитель'),
-(3, 'Менеджер');
+INSERT INTO `dolzhnost` (`dolzhnost_id`, `name`, `mat_respons`) VALUES
+(1, 'Администратор', 0),
+(2, 'Руководитель', 0),
+(3, 'Менеджер', 1);
 
 -- --------------------------------------------------------
 
@@ -63,7 +64,9 @@ CREATE TABLE `employee` (
 --
 
 INSERT INTO `employee` (`employee_id`, `lastname`, `firstname`, `patronomic`, `otdel_id`, `dolzhnost_id`, `login`, `pass`) VALUES
-(1, 'Админ', 'Админ', 'Админ', 2, 1, 'admin', '$2y$10$mFlJsQgNvDQ27XfADrMh8O9OQA47f2gLmqYdwGeg8SpsvdoRUX95S');
+(1, 'Админ', 'Админ', 'Админ', 2, 1, 'admin', '$2y$10$mFlJsQgNvDQ27XfADrMh8O9OQA47f2gLmqYdwGeg8SpsvdoRUX95S'),
+(2, 'Шляпик', 'Александр', 'Палыч', 1, 2, 'shlyapik2', '$2y$10$53grYrBSY0/lW2fA57jcpujAOK/E/fiK7PdKBLUA6UycHh2GdyJHi'),
+(4, 'Громов', 'Антон', 'Палыч', 1, 3, 'manager1', '$2y$10$DVPLa0D.wC5VeJlEX1IkceK1ET1ZbIv3uoNrxnMu47E7fZF5g2U7S');
 
 -- --------------------------------------------------------
 
@@ -82,7 +85,8 @@ CREATE TABLE `models` (
 
 INSERT INTO `models` (`model_id`, `name`) VALUES
 (1, 'компьютер'),
-(2, 'принтер');
+(2, 'принтер'),
+(4, 'Сканер');
 
 -- --------------------------------------------------------
 
@@ -122,7 +126,8 @@ CREATE TABLE `pred` (
 
 INSERT INTO `pred` (`pred_id`, `name`) VALUES
 (1, '1-е здание'),
-(2, '2-е здание');
+(2, '2-е здание'),
+(3, '3 здание');
 
 -- --------------------------------------------------------
 
@@ -133,11 +138,17 @@ INSERT INTO `pred` (`pred_id`, `name`) VALUES
 CREATE TABLE `respons_face` (
   `respons_face_id` smallint NOT NULL,
   `employee_id` smallint NOT NULL,
-  `otdel_id` smallint NOT NULL,
   `technique_id` smallint NOT NULL,
   `room_id` smallint NOT NULL,
   `date_extrat` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Дамп данных таблицы `respons_face`
+--
+
+INSERT INTO `respons_face` (`respons_face_id`, `employee_id`, `technique_id`, `room_id`, `date_extrat`) VALUES
+(1, 4, 1, 1, '2020-06-13');
 
 -- --------------------------------------------------------
 
@@ -172,7 +183,7 @@ CREATE TABLE `technique` (
   `name` varchar(50) NOT NULL,
   `date_buy` date NOT NULL,
   `model_id` smallint NOT NULL,
-  `price` decimal(10,0) NOT NULL,
+  `price` bigint NOT NULL,
   `room_id` smallint NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -181,7 +192,7 @@ CREATE TABLE `technique` (
 --
 
 INSERT INTO `technique` (`technique_id`, `inv_number`, `name`, `date_buy`, `model_id`, `price`, `room_id`) VALUES
-(1, '0000000001', 'Компьютер настольный', '2020-05-07', 1, '150000', 1);
+(1, '0000000001', 'Компьютер настольный', '2020-05-07', 1, 150000, 1);
 
 --
 -- Индексы сохранённых таблиц
@@ -249,13 +260,13 @@ ALTER TABLE `dolzhnost`
 -- AUTO_INCREMENT для таблицы `employee`
 --
 ALTER TABLE `employee`
-  MODIFY `employee_id` smallint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `employee_id` smallint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT для таблицы `models`
 --
 ALTER TABLE `models`
-  MODIFY `model_id` smallint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `model_id` smallint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT для таблицы `otdel`
@@ -267,13 +278,13 @@ ALTER TABLE `otdel`
 -- AUTO_INCREMENT для таблицы `pred`
 --
 ALTER TABLE `pred`
-  MODIFY `pred_id` smallint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `pred_id` smallint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT для таблицы `respons_face`
 --
 ALTER TABLE `respons_face`
-  MODIFY `respons_face_id` smallint NOT NULL AUTO_INCREMENT;
+  MODIFY `respons_face_id` smallint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT для таблицы `room`
@@ -285,7 +296,7 @@ ALTER TABLE `room`
 -- AUTO_INCREMENT для таблицы `technique`
 --
 ALTER TABLE `technique`
-  MODIFY `technique_id` smallint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `technique_id` smallint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

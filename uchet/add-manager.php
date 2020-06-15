@@ -12,7 +12,7 @@
     <h1><?=$header;?></h1>
     <ol class="breadcrumb">
     <li><a href="/index.php"><i class="fa fa-dashboard"></i> Главная</a></li>
-    <li><a href="list-managers.php">Управляющие</a></li>
+    <li><a href="list-managers.php">Менеджеры</a></li>
     <li class="active"><?=$header;?></li>
     </ol>
 </section>
